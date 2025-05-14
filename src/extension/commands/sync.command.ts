@@ -2,10 +2,10 @@ import * as vscode from "vscode";
 import { ExtensionCommand, ExtensionMessage } from "../../shared/definitions/extension.definitions";
 import { TestCase } from "../../shared/definitions/testCase.definitions";
 import { createWebviewPanel } from "../clients/vsCode.client";
-import { loadTestCasesHandler } from "../handlers/loadTestCases.handler";
-import { saveTestCasesHandler } from "../handlers/saveTestCases.handler";
+import { loadHandler } from "../handlers/load.handler";
+import { saveHandler } from "../handlers/save.handler";
 
-export function syncTestCasesCommand(): ExtensionCommand {
+export function syncCommand(): ExtensionCommand {
   const command = "test-rail-sync-extension.sync";
 
   const callback = (context: vscode.ExtensionContext) => async (uri: vscode.Uri) => {
@@ -15,13 +15,12 @@ export function syncTestCasesCommand(): ExtensionCommand {
       const handleDidReceiveMessage = async (message: ExtensionMessage): Promise<void> => {
         switch (message.type) {
           case "init":
-            const data = await loadTestCasesHandler(uri.fsPath);
+            const data = await loadHandler(uri.fsPath);
             panel.webview.postMessage({ type: "load", data });
             break;
           case "save":
             vscode.window.showInformationMessage("Saving test cases ⚙️");
-            await saveTestCasesHandler(message.data as TestCase[]);
-            // fs.writeFileSync(path, content, "utf8");
+            await saveHandler(uri.fsPath, message.data as TestCase[]);
             vscode.window.showInformationMessage("Test cases saved successfully ✅");
             break;
           case "error":
@@ -34,7 +33,6 @@ export function syncTestCasesCommand(): ExtensionCommand {
 
       panel.webview.onDidReceiveMessage(handleDidReceiveMessage);
     } catch (error) {
-      console.error("Error in sync command:", error);
       vscode.window.showErrorMessage(JSON.stringify({ error }));
     }
   };
