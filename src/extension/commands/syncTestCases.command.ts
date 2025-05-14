@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
-import { ExtensionCommand, ExtensionMessage } from "../../../shared/definitions/extension.definitions";
-import { TestCase } from "../../../shared/definitions/testCase.definitions";
-import { createWebviewPanel } from "../../../shared/utils/extension.utils";
-import { syncInit } from "../../messages/syncTestCases/syncInitTestCases.message";
-import { syncSave } from "../../messages/syncTestCases/syncSaveTestCases.message";
+import { ExtensionCommand, ExtensionMessage } from "../../shared/definitions/extension.definitions";
+import { TestCase } from "../../shared/definitions/testCase.definitions";
+import { createWebviewPanel } from "../clients/vsCode.client";
+import { loadTestCasesHandler } from "../handlers/loadTestCases.handler";
+import { saveTestCasesHandler } from "../handlers/saveTestCases.handler";
 
 export function syncTestCasesCommand(): ExtensionCommand {
   const command = "test-rail-sync-extension.sync";
@@ -14,22 +14,24 @@ export function syncTestCasesCommand(): ExtensionCommand {
 
       const handleDidReceiveMessage = async (message: ExtensionMessage): Promise<void> => {
         switch (message.type) {
-          case "sync-init":
-            const data = await syncInit(uri.fsPath);
-            panel.webview.postMessage({ type: "sync-load", data });
+          case "init":
+            const data = await loadTestCasesHandler(uri.fsPath);
+            panel.webview.postMessage({ type: "load", data });
             break;
-          case "sync-save":
+          case "save":
             vscode.window.showInformationMessage("Saving test cases ⚙️");
-            await syncSave(message.data as TestCase[]);
+            await saveTestCasesHandler(message.data as TestCase[]);
+            // fs.writeFileSync(path, content, "utf8");
             vscode.window.showInformationMessage("Test cases saved successfully ✅");
             break;
-          case "view-error":
+          case "error":
             vscode.window.showErrorMessage(JSON.stringify({ error: message?.error }));
             break;
           default:
             break;
         }
       };
+
       panel.webview.onDidReceiveMessage(handleDidReceiveMessage);
     } catch (error) {
       console.error("Error in sync command:", error);
@@ -37,5 +39,8 @@ export function syncTestCasesCommand(): ExtensionCommand {
     }
   };
 
-  return { command, callback };
+  return {
+    command,
+    callback,
+  };
 }

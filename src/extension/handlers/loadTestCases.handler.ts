@@ -1,13 +1,13 @@
-import { TestCase, TestCaseOption, TestCaseOptions } from "../../../shared/definitions/testCase.definitions";
-import { getSections } from "../../api/testRail/sections.api";
-import { getSuites } from "../../api/testRail/suites.api";
-import { getCase } from "../../api/testRail/testCases.api";
-import { readTestCaseOptionsSettings, readTestCaseSettings } from "../../config/settings.config";
-import { extractDescriptions, readFile } from "../../../shared/utils/file.utils";
+import * as fs from "fs";
+import { getCase, getSections, getSuites } from "../clients/testRail.client";
+import { readTestCaseOptionsSettings, readTestCaseSettings } from "../clients/vsCode.client";
+import { TestCase, TestCaseOption, TestCaseOptions } from "../../shared/definitions/testCase.definitions";
+import { readDescriptions } from "../../shared/utils/descriptions.utils";
 
 async function readTestCases(path: string): Promise<TestCase[]> {
-  const fileContent = readFile(path);
-  const descriptions = extractDescriptions(fileContent);
+  const fileContent = fs.readFileSync(path, "utf8");
+
+  const descriptions = readDescriptions(fileContent);
   const settings = readTestCaseSettings();
 
   const testCases = (
@@ -38,12 +38,11 @@ const getSectionOptions = async (testCases: TestCase[]): Promise<TestCaseOption[
   return flatResponse.map((section) => ({ label: section.name, value: section.id }));
 };
 
-export async function syncInit(path: string): Promise<{
+export async function loadTestCasesHandler(path: string): Promise<{
   testCases: TestCase[];
   options: TestCaseOptions;
 }> {
   const testCases = await readTestCases(path);
-
   const suiteOptions = await getSuiteOptions();
   const sectionOptions = await getSectionOptions(testCases);
   const testCaseOptions = readTestCaseOptionsSettings();

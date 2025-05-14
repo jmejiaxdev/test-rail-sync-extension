@@ -6,7 +6,7 @@ export type ExtensionCommand = {
 };
 
 export type ExtensionMessage = {
-  type?: "sync-init" | "sync-load" | "sync-save" | "view-error";
+  type?: "init" | "load" | "save" | "error";
   data?: unknown;
   error?: string;
 };

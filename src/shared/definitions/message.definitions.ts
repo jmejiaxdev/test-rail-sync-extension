@@ -1,6 +1,6 @@
 import { TestCase, TestCaseOptions } from "./testCase.definitions";
 
-export type SyncTestCasesLoadMessageData = {
+export type LoadTestCasesMessageData = {
   testCases?: TestCase[];
   options?: TestCaseOptions;
 };

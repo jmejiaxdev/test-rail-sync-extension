@@ -27,7 +27,6 @@ export function TestCasesTable(): JSX.Element {
     };
 
   // TODO: add column toggle
-  // TODO styles: font smaller
   return (
     <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
       <Table aria-label="sticky table" stickyHeader>

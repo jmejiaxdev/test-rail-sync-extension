@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import { SyncTestCasesLoadMessageData } from "../../../shared/definitions/message.definitions";
+import { LoadTestCasesMessageData } from "../../../shared/definitions/message.definitions";
 
-type Context = SyncTestCasesLoadMessageData & {
+type Context = LoadTestCasesMessageData & {
   isLoading?: boolean;
   onUpdateTestCase?: (index: number, key: string, value: string) => void;
   onSaveTestCases?: () => void;

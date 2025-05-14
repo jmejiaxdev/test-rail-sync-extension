@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { settingsCommand } from "./extension/commands/settings/settings.command";
-import { syncTestCasesCommand } from "./extension/commands/syncTestCases/syncTestCases.command";
+import { settingsCommand } from "./extension/commands/settings.command";
+import { syncTestCasesCommand } from "./extension/commands/syncTestCases.command";
 
 export function activate(context: vscode.ExtensionContext): void {
   const extensionCommands = [syncTestCasesCommand, settingsCommand];
