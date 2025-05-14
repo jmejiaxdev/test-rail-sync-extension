@@ -1,0 +1,348 @@
+{
+  "name": "test-rail-sync-extension",
+  "displayName": "test-rail-sync-extension",
+  "description": "TestRail Sync VS Code Extension",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "TestRail Sync Configuration",
+      "properties": {
+        "testRailSync.api.organizationUrl": {
+          "title": "API Organization URL",
+          "description": "Set the organization URL for TestRail API. This is the base URL for your TestRail instance, typically in the format 'https://yourcompany.testrail.com/index.php?“'.",
+          "order": 0,
+          "type": "string",
+          "default": ""
+        },
+        "testRailSync.api.username": {
+          "title": "API Username",
+          "description": "Set the username for TestRail API. This is the username you use to log in to TestRail.",
+          "order": 1,
+          "type": "string"
+        },
+        "testRailSync.api.key": {
+          "title": "API Key",
+          "description": "Set the API key for TestRail API. This is a unique key that allows you to authenticate with the TestRail API.",
+          "order": 2,
+          "type": "string",
+          "sensitive": true
+        },
+        "testRailSync.api.projectId": {
+          "title": "API Project ID",
+          "description": "Set the project ID for TestRail API. This is the ID of the project you want to sync with.",
+          "order": 3,
+          "type": "string",
+          "default": ""
+        },
+        "testRailSync.testCase.section_id": {
+          "title": "Test Case Section ID",
+          "description": "Set this value if you want to use a default section ID for your test cases. This is the ID of the section where your test cases are located. A project can have multiple sections.",
+          "order": 4,
+          "type": "number"
+        },
+        "testRailSync.testCase.suite_id": {
+          "title": "Test Case Suite ID",
+          "description": "Set this value if you want to use a default suite ID for your test cases. This is the ID of the suite where your test cases are located. A section can have multiple suites.",
+          "order": 5,
+          "type": "number"
+        },
+        "testRailSync.testCase.template_id": {
+          "title": "Test Case Template ID",
+          "description": "Set this value if you want to use a default template ID for your test cases. This is the ID of the template that defines the structure of your test cases.",
+          "order": 6,
+          "type": "number",
+          "enum": [
+            0,
+            1,
+            2
+          ],
+          "enumItemLabels": [
+            "Exploratory Charter",
+            "Test Case",
+            "UniTest / WebIR"
+          ],
+          "default": 1
+        },
+        "testRailSync.testCase.type_id": {
+          "title": "Test Case Type ID",
+          "description": "Set this value if you want to use a default type ID for your test cases. This is the ID of the type that defines the category of your test cases.",
+          "order": 7,
+          "type": "number",
+          "enum": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "enumItemLabels": [
+            "API Postman",
+            "API Unit Test",
+            "Autify ETE Test",
+            "Automated",
+            "Client Unit Test",
+            "Database Test",
+            "DBT Test",
+            "E2E Test",
+            "Exploratory",
+            "Functionality",
+            "Glue Unit Test",
+            "Integration Test",
+            "Manual",
+            "Other",
+            "Sanity Test",
+            "Smoke Test",
+            "Unit Test"
+          ],
+          "default": 1
+        },
+        "testRailSync.testCase.priority_id": {
+          "title": "Test Case Priority ID",
+          "description": "Set this value if you want to use a default priority ID for your test cases. This is the ID of the priority that defines the importance of your test cases.",
+          "order": 8,
+          "type": "number",
+          "enum": [
+            1,
+            3,
+            4
+          ],
+          "enumItemLabels": [
+            "1 - Don't Test",
+            "2 - Test If Time",
+            "3 - MustTest"
+          ],
+          "default": 2
+        },
+        "testRailSync.testCase.custom_manual_vs_automated": {
+          "title": "Test Case Custom Manual vs Automated",
+          "description": "Set this value if you want to use a default custom manual vs automated value for your test cases. This is the custom field that defines whether your test cases are manual or automated.",
+          "order": 9,
+          "type": "number",
+          "enum": [
+            1,
+            2,
+            3
+          ],
+          "enumItemLabels": [
+            "None",
+            "Manual",
+            "Automated"
+          ],
+          "default": 3
+        },
+        "testRailSync.testCase.custom_manual_automated": {
+          "title": "Test Case Type Automation",
+          "description": "Set this value if you want to use a default type automation value for your test cases. This is the custom field that defines the type of automation performed on your test cases.",
+          "order": 10,
+          "type": "number",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "enumItemLabels": [
+            "None",
+            "Manual",
+            "Under ENG development (manually tested)",
+            "E2E ENG Automated Test",
+            "Unit Test",
+            "Autify Automated",
+            "Postman API Automated",
+            "Selenium Automated",
+            "Older Tests",
+            "Nightwatch Automated",
+            "Playwright Automated",
+            "Synthetic Test",
+            "Smoke Test"
+          ],
+          "default": 5
+        },
+        "testRailSync.testCase.custom_automation_tool_type": {
+          "title": "Test Case Custom Automation Tool Type",
+          "description": "Set this value if you want to use a default custom automation tool type for your test cases. This is the custom field that defines the type of automation tool used for your test cases.",
+          "order": 11,
+          "type": "number",
+          "enum": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "enumItemLabels": [
+            "None",
+            "Jest",
+            "Autify",
+            "Nightwatch",
+            "Cypress",
+            "Selenium",
+            "Mocha",
+            "Playwright",
+            "Postman",
+            "Manual",
+            "DataDog",
+            "XUnit",
+            "Q4DataLib",
+            "Airflow"
+          ],
+          "default": 1
+        },
+        "testRailSync.testCase.custom_test_level": {
+          "title": "Test Case Custom Test Level",
+          "description": "Set this value if you want to use a default custom test level for your test cases. This is the custom field that defines the level of testing performed on your test cases.",
+          "order": 12,
+          "type": "number",
+          "enum": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "enumItemLabels": [
+            "None",
+            "Unit test",
+            "Integration test",
+            "Exploratory test",
+            "Regression test",
+            "Smoke test",
+            "Sanity Post-deployment test",
+            "Functionality test",
+            "Smoke & Regression Test",
+            "Sanity Test"
+          ],
+          "default": 1
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "test-rail-sync-extension.sync",
+        "title": "Sync Test Cases"
+      },
+      {
+        "command": "test-rail-sync-extension.settings",
+        "title": "Settings"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "submenu",
+        "label": "TestRail Sync"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "group": "test-rail-sync-extension",
+          "submenu": "submenu"
+        }
+      ],
+      "editor/context": [
+        {
+          "group": "test-rail-sync-extension",
+          "submenu": "submenu"
+        }
+      ],
+      "submenu": [
+        {
+          "command": "test-rail-sync-extension.sync",
+          "group": "1_submenu"
+        },
+        {
+          "command": "test-rail-sync-extension.settings",
+          "group": "9_submenu"
+        }
+      ]
+    }
+  },
+  "webviews": [
+    {
+      "path": "./dist/webview.js",
+      "webviewOptions": {
+        "enableScripts": true
+      }
+    }
+  ],
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext .ts,.tsx",
+    "format": "prettier --write src/**/*.{ts,tsx}",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.9",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.98.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.13.0",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.2",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.0.1",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "axios": "^1.8.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}
