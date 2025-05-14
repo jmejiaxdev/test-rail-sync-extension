@@ -1,0 +1,28 @@
+name: Destroy Branch After Merge
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  delete-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR was merged and target is main
+        if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+        run: |
+          echo "PR was merged into main. Deleting branch..."
+
+          # Checkout main (so we can delete the merged branch)
+          git checkout main
+
+          # Delete the branch.  Use -D to force delete even if not fully merged
+          git branch -D "${{ github.event.pull_request.head.ref }}"
+
+          # Delete the remote branch
+          git push origin -d "${{ github.event.pull_request.head.ref }}"
+
+      - name: Output skipped message
+        if: github.event.pull_request.merged == false || github.event.pull_request.base.ref != 'main'
+        run: echo "PR was not merged into main, or was closed without merging. Branch will not be deleted."
